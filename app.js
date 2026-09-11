@@ -183,37 +183,45 @@
     var panel = document.createElement("div");
     panel.className = "items-panel";
 
-    var items = c.itens.slice().sort(function (a, b) {
+    var itemsByDate = c.itens.slice().sort(function (a, b) {
       return b.data < a.data ? -1 : b.data > a.data ? 1 : 0;
     });
 
-    var list = document.createElement("div");
-    list.className = "items-list";
+    var totalQtd = itemsByDate.reduce(function (sum, it) { return sum + it.qtd; }, 0);
+    var resumo = summarizeItems(c.itens);
 
-    var totalQtd = 0;
-    items.forEach(function (it) {
-      totalQtd += it.qtd;
+    var tabs = document.createElement("div");
+    tabs.className = "tabs";
+    var btnResumo = document.createElement("button");
+    btnResumo.type = "button";
+    btnResumo.className = "tab-btn active";
+    btnResumo.textContent = "Resumo";
+    var btnHistorico = document.createElement("button");
+    btnHistorico.type = "button";
+    btnHistorico.className = "tab-btn";
+    btnHistorico.textContent = "Histórico";
+    tabs.appendChild(btnResumo);
+    tabs.appendChild(btnHistorico);
+    panel.appendChild(tabs);
 
-      var row = document.createElement("div");
-      row.className = "item-row";
+    var resumoList = buildResumoList(resumo);
+    var historicoList = buildHistoricoList(itemsByDate);
+    historicoList.style.display = "none";
+    panel.appendChild(resumoList);
+    panel.appendChild(historicoList);
 
-      var prod = document.createElement("div");
-      prod.className = "item-prod";
-      prod.textContent = it.prod;
-      row.appendChild(prod);
-
-      var line = document.createElement("div");
-      line.className = "item-line";
-      line.innerHTML =
-        '<span class="item-date">' + formatDate(it.data) + "</span>" +
-        '<span class="dot">·</span>' +
-        '<span class="item-code">Cód. ' + it.prodCod + "</span>" +
-        '<span class="item-qtd">' + it.qtd + " unid.</span>";
-      row.appendChild(line);
-
-      list.appendChild(row);
+    btnResumo.addEventListener("click", function () {
+      btnResumo.classList.add("active");
+      btnHistorico.classList.remove("active");
+      resumoList.style.display = "";
+      historicoList.style.display = "none";
     });
-    panel.appendChild(list);
+    btnHistorico.addEventListener("click", function () {
+      btnHistorico.classList.add("active");
+      btnResumo.classList.remove("active");
+      historicoList.style.display = "";
+      resumoList.style.display = "none";
+    });
 
     var totalEl = document.createElement("div");
     totalEl.className = "items-total";
@@ -221,6 +229,82 @@
     panel.appendChild(totalEl);
 
     return panel;
+  }
+
+  // Agrupa por produto e soma as quantidades de datas diferentes.
+  function summarizeItems(itens) {
+    var map = {};
+    var order = [];
+    itens.forEach(function (it) {
+      var key = it.prodCod;
+      if (!map[key]) {
+        map[key] = {
+          prodCod: it.prodCod,
+          prod: it.prod,
+          qtd: 0,
+          registros: 0,
+          primeiraData: it.data,
+          ultimaData: it.data
+        };
+        order.push(key);
+      }
+      var g = map[key];
+      g.qtd += it.qtd;
+      g.registros += 1;
+      if (it.data > g.ultimaData) g.ultimaData = it.data;
+      if (it.data < g.primeiraData) g.primeiraData = it.data;
+    });
+    return order
+      .map(function (k) { return map[k]; })
+      .sort(function (a, b) { return b.qtd - a.qtd; });
+  }
+
+  function buildResumoList(resumo) {
+    var list = document.createElement("div");
+    list.className = "items-list";
+
+    resumo.forEach(function (g) {
+      var sub = g.registros > 1
+        ? "Cód. " + g.prodCod + " · " + g.registros + " lançamentos · última " + formatDate(g.ultimaData)
+        : "Cód. " + g.prodCod + " · " + formatDate(g.ultimaData);
+      list.appendChild(buildItemRow(g.prod, sub, g.qtd + " unid."));
+    });
+
+    return list;
+  }
+
+  function buildHistoricoList(itemsByDate) {
+    var list = document.createElement("div");
+    list.className = "items-list";
+
+    itemsByDate.forEach(function (it) {
+      var sub = formatDate(it.data) + " · Cód. " + it.prodCod;
+      list.appendChild(buildItemRow(it.prod, sub, it.qtd + " unid."));
+    });
+
+    return list;
+  }
+
+  function buildItemRow(prodTxt, subTxt, qtdTxt) {
+    var row = document.createElement("div");
+    row.className = "item-row";
+
+    var prod = document.createElement("div");
+    prod.className = "item-prod";
+    prod.textContent = prodTxt;
+    row.appendChild(prod);
+
+    var sub = document.createElement("div");
+    sub.className = "item-sub";
+    sub.textContent = subTxt;
+    row.appendChild(sub);
+
+    var qtd = document.createElement("div");
+    qtd.className = "item-qtd";
+    qtd.textContent = qtdTxt;
+    row.appendChild(qtd);
+
+    return row;
   }
 
   function chevronSvg() {

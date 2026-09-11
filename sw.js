@@ -1,4 +1,4 @@
-var CACHE_NAME = "comodatos-v3";
+var CACHE_NAME = "comodatos-v4";
 var ASSETS = [
   "./",
   "./index.html",
