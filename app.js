@@ -187,27 +187,33 @@
       return b.data < a.data ? -1 : b.data > a.data ? 1 : 0;
     });
 
-    var table = document.createElement("table");
-    table.className = "items-table";
-    table.innerHTML =
-      "<thead><tr>" +
-      "<th>Data</th><th>Cód. prod.</th><th>Produto</th><th class='num'>Qtd</th>" +
-      "</tr></thead>";
+    var list = document.createElement("div");
+    list.className = "items-list";
 
-    var tbody = document.createElement("tbody");
     var totalQtd = 0;
     items.forEach(function (it) {
       totalQtd += it.qtd;
-      var tr = document.createElement("tr");
-      tr.innerHTML =
-        '<td class="date">' + formatDate(it.data) + "</td>" +
-        '<td class="prodcode">' + it.prodCod + "</td>" +
-        '<td class="prod">' + escapeHtml(it.prod) + "</td>" +
-        '<td class="num">' + it.qtd + "</td>";
-      tbody.appendChild(tr);
+
+      var row = document.createElement("div");
+      row.className = "item-row";
+
+      var prod = document.createElement("div");
+      prod.className = "item-prod";
+      prod.textContent = it.prod;
+      row.appendChild(prod);
+
+      var line = document.createElement("div");
+      line.className = "item-line";
+      line.innerHTML =
+        '<span class="item-date">' + formatDate(it.data) + "</span>" +
+        '<span class="dot">·</span>' +
+        '<span class="item-code">Cód. ' + it.prodCod + "</span>" +
+        '<span class="item-qtd">' + it.qtd + " unid.</span>";
+      row.appendChild(line);
+
+      list.appendChild(row);
     });
-    table.appendChild(tbody);
-    panel.appendChild(table);
+    panel.appendChild(list);
 
     var totalEl = document.createElement("div");
     totalEl.className = "items-total";
