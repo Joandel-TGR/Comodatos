@@ -191,7 +191,7 @@
     table.className = "items-table";
     table.innerHTML =
       "<thead><tr>" +
-      "<th>Data</th><th>Produto</th><th>Cód. prod.</th><th class='num'>Qtd</th>" +
+      "<th>Data</th><th>Cód. prod.</th><th>Produto</th><th class='num'>Qtd</th>" +
       "</tr></thead>";
 
     var tbody = document.createElement("tbody");
@@ -201,8 +201,8 @@
       var tr = document.createElement("tr");
       tr.innerHTML =
         '<td class="date">' + formatDate(it.data) + "</td>" +
-        '<td class="prod">' + escapeHtml(it.prod) + "</td>" +
         '<td class="prodcode">' + it.prodCod + "</td>" +
+        '<td class="prod">' + escapeHtml(it.prod) + "</td>" +
         '<td class="num">' + it.qtd + "</td>";
       tbody.appendChild(tr);
     });

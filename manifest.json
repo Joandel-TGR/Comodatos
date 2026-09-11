@@ -1,6 +1,6 @@
 {
-  "name": "Comodatos",
-  "short_name": "Comodatos",
+  "name": "Consulta Comodatos",
+  "short_name": "Consulta",
   "description": "Consulta de clientes e itens em comodato",
   "start_url": "./index.html",
   "scope": "./",
