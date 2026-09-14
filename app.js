@@ -189,39 +189,45 @@
 
     var totalQtd = itemsByDate.reduce(function (sum, it) { return sum + it.qtd; }, 0);
     var resumo = summarizeItems(c.itens);
+    var temRepetido = resumo.some(function (g) { return g.registros > 1; });
 
-    var tabs = document.createElement("div");
-    tabs.className = "tabs";
-    var btnResumo = document.createElement("button");
-    btnResumo.type = "button";
-    btnResumo.className = "tab-btn active";
-    btnResumo.textContent = "Resumo";
-    var btnHistorico = document.createElement("button");
-    btnHistorico.type = "button";
-    btnHistorico.className = "tab-btn";
-    btnHistorico.textContent = "Histórico";
-    tabs.appendChild(btnResumo);
-    tabs.appendChild(btnHistorico);
-    panel.appendChild(tabs);
-
-    var resumoList = buildResumoList(resumo);
     var historicoList = buildHistoricoList(itemsByDate);
-    historicoList.style.display = "none";
-    panel.appendChild(resumoList);
-    panel.appendChild(historicoList);
 
-    btnResumo.addEventListener("click", function () {
-      btnResumo.classList.add("active");
-      btnHistorico.classList.remove("active");
-      resumoList.style.display = "";
-      historicoList.style.display = "none";
-    });
-    btnHistorico.addEventListener("click", function () {
-      btnHistorico.classList.add("active");
-      btnResumo.classList.remove("active");
-      historicoList.style.display = "";
+    if (temRepetido) {
+      var tabs = document.createElement("div");
+      tabs.className = "tabs";
+      var btnHistorico = document.createElement("button");
+      btnHistorico.type = "button";
+      btnHistorico.className = "tab-btn active";
+      btnHistorico.textContent = "Histórico";
+      var btnResumo = document.createElement("button");
+      btnResumo.type = "button";
+      btnResumo.className = "tab-btn";
+      btnResumo.textContent = "Resumo";
+      tabs.appendChild(btnHistorico);
+      tabs.appendChild(btnResumo);
+      panel.appendChild(tabs);
+
+      var resumoList = buildResumoList(resumo);
       resumoList.style.display = "none";
-    });
+      panel.appendChild(historicoList);
+      panel.appendChild(resumoList);
+
+      btnHistorico.addEventListener("click", function () {
+        btnHistorico.classList.add("active");
+        btnResumo.classList.remove("active");
+        historicoList.style.display = "";
+        resumoList.style.display = "none";
+      });
+      btnResumo.addEventListener("click", function () {
+        btnResumo.classList.add("active");
+        btnHistorico.classList.remove("active");
+        resumoList.style.display = "";
+        historicoList.style.display = "none";
+      });
+    } else {
+      panel.appendChild(historicoList);
+    }
 
     var totalEl = document.createElement("div");
     totalEl.className = "items-total";
