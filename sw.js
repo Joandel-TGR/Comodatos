@@ -1,4 +1,4 @@
-var CACHE_NAME = "comodatos-v6";
+var CACHE_NAME = "comodatos-v7";
 var ASSETS = [
   "./",
   "./index.html",
@@ -7,7 +7,9 @@ var ASSETS = [
   "./clientes.json",
   "./manifest.json",
   "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icons/icon-512.png",
+  "./icons/brand/logo-tgr.png",
+  "./icons/brand/handshake.png"
 ];
 
 self.addEventListener("install", function (event) {
