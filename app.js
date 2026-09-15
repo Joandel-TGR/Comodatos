@@ -5,10 +5,18 @@
   var filtered = [];
   var renderLimit = 150;
   var PAGE_SIZE = 150;
+  var selectedVend = null; // null = "ver todos"
+
+  var homeView = document.getElementById("homeView");
+  var consultaView = document.getElementById("consultaView");
+  var vendGrid = document.getElementById("vendGrid");
+  var vendAllBtn = document.getElementById("vendAllBtn");
+  var backBtn = document.getElementById("backBtn");
+  var trocarVendBtn = document.getElementById("trocarVendBtn");
+  var vendChip = document.getElementById("vendChip");
 
   var searchInput = document.getElementById("searchInput");
   var cidadeFilter = document.getElementById("cidadeFilter");
-  var vendFilter = document.getElementById("vendFilter");
   var clearBtn = document.getElementById("clearFilters");
   var listEl = document.getElementById("clientList");
   var emptyEl = document.getElementById("emptyState");
@@ -41,18 +49,18 @@
         }, c.itens[0] ? c.itens[0].data : "");
       });
       populateFilters();
+      populateVendGrid();
       dbInfoEl.textContent = clients.length.toLocaleString("pt-BR") + " clientes com itens em comodato";
       totalFooterEl.textContent = "Base local · " + clients.length.toLocaleString("pt-BR") + " clientes · funciona offline";
-      applyFilters();
     })
     .catch(function (err) {
       dbInfoEl.textContent = "Não foi possível carregar a base de dados.";
+      vendGrid.innerHTML = "<p class=\"home-loading\">Não foi possível carregar a base de dados.</p>";
       console.error(err);
     });
 
   function populateFilters() {
     var cidades = Array.from(new Set(clients.map(function (c) { return c.cidade; }))).sort();
-    var vends = Array.from(new Set(clients.map(function (c) { return c.vend; }))).sort(function (a, b) { return a - b; });
 
     cidades.forEach(function (cidade) {
       var opt = document.createElement("option");
@@ -60,23 +68,60 @@
       opt.textContent = cidade;
       cidadeFilter.appendChild(opt);
     });
+  }
 
+  function populateVendGrid() {
+    var counts = {};
+    clients.forEach(function (c) {
+      counts[c.vend] = (counts[c.vend] || 0) + 1;
+    });
+    var vends = Object.keys(counts).map(Number).sort(function (a, b) { return a - b; });
+
+    vendGrid.innerHTML = "";
     vends.forEach(function (v) {
-      var opt = document.createElement("option");
-      opt.value = v;
-      opt.textContent = "Vend " + v;
-      vendFilter.appendChild(opt);
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "vend-card";
+      btn.innerHTML =
+        '<span class="vend-card-code">' + v + "</span>" +
+        '<span class="vend-card-count">' + counts[v] + (counts[v] === 1 ? " cliente" : " clientes") + "</span>";
+      btn.addEventListener("click", function () {
+        goToConsulta(v);
+      });
+      vendGrid.appendChild(btn);
     });
   }
+
+  function goToConsulta(vend) {
+    selectedVend = vend;
+    if (vend === null) {
+      vendChip.textContent = "Todos os vendedores";
+    } else {
+      vendChip.textContent = "Vendedor " + vend;
+    }
+    searchInput.value = "";
+    cidadeFilter.value = "";
+    homeView.hidden = true;
+    consultaView.hidden = false;
+    applyFilters();
+  }
+
+  function goHome() {
+    homeView.hidden = false;
+    consultaView.hidden = true;
+  }
+
+  vendAllBtn.addEventListener("click", function () { goToConsulta(null); });
+  backBtn.addEventListener("click", goHome);
+  trocarVendBtn.addEventListener("click", goHome);
 
   function applyFilters() {
     var q = normalize(searchInput.value.trim());
     var cidade = cidadeFilter.value;
-    var vend = vendFilter.value;
 
     filtered = clients.filter(function (c) {
+      if (selectedVend !== null && c.vend !== selectedVend) return false;
       if (cidade && c.cidade !== cidade) return false;
-      if (vend && String(c.vend) !== vend) return false;
       if (q && c._search.indexOf(q) === -1) return false;
       return true;
     });
@@ -336,11 +381,9 @@
     debounceTimer = setTimeout(applyFilters, 120);
   });
   cidadeFilter.addEventListener("change", applyFilters);
-  vendFilter.addEventListener("change", applyFilters);
   clearBtn.addEventListener("click", function () {
     searchInput.value = "";
     cidadeFilter.value = "";
-    vendFilter.value = "";
     applyFilters();
   });
 

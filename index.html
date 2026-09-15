@@ -12,47 +12,71 @@
 </head>
 <body>
 
-<header class="topbar">
-  <div class="topbar-row">
-    <div class="mark" aria-hidden="true">
-      <svg viewBox="0 0 40 40" width="30" height="30">
-        <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2.4"/>
-        <path d="M12 21.5 L18 27 L29 14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- ===================== TELA INICIAL ===================== -->
+<div id="homeView" class="view home-view">
+  <div class="home-inner">
+    <div class="home-mark" aria-hidden="true">
+      <svg viewBox="0 0 40 40" width="46" height="46">
+        <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <path d="M12 21.5 L18 27 L29 14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
-    <div class="title-block">
-      <h1>Consulta Comodatos</h1>
-      <p id="dbInfo" class="subtitle">carregando base…</p>
+    <h1 class="home-title">Consulta Comodatos</h1>
+    <p class="home-subtitle">Selecione seu código de vendedor para começar</p>
+
+    <div id="vendGrid" class="vend-grid" aria-label="Selecionar vendedor">
+      <p class="home-loading">carregando vendedores…</p>
     </div>
+
+    <button id="vendAllBtn" type="button" class="link-btn">Ver todos os clientes, sem filtrar por vendedor</button>
   </div>
+</div>
 
-  <div class="search-row">
-    <input id="searchInput" type="search" inputmode="search" placeholder="Buscar por código ou nome do cliente" autocomplete="off" aria-label="Buscar cliente">
-  </div>
+<!-- ===================== TELA DE CONSULTA ===================== -->
+<div id="consultaView" class="view consulta-view" hidden>
+  <header class="topbar">
+    <div class="topbar-row">
+      <button id="backBtn" type="button" class="back-btn" aria-label="Voltar">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="title-block">
+        <h1>Consulta Comodatos</h1>
+        <p id="dbInfo" class="subtitle">carregando base…</p>
+      </div>
+    </div>
 
-  <div class="filter-row">
-    <select id="vendFilter" aria-label="Filtrar por vendedor">
-      <option value="">Todos os vendedores</option>
-    </select>
-    <select id="cidadeFilter" aria-label="Filtrar por cidade">
-      <option value="">Todas as cidades</option>
-    </select>
-    <button id="clearFilters" class="ghost-btn" type="button">Limpar</button>
-  </div>
-</header>
+    <div class="vend-chip-row">
+      <span id="vendChip" class="vend-chip"></span>
+      <button id="trocarVendBtn" type="button" class="ghost-btn">Trocar vendedor</button>
+    </div>
 
-<main>
-  <div id="resultCount" class="result-count"></div>
-  <ul id="clientList" class="client-list" aria-live="polite"></ul>
-  <p id="emptyState" class="empty-state" hidden>
-    Nenhum cliente encontrado com esses filtros.<br>
-    Tente outro código, nome ou limpe os filtros.
-  </p>
-</main>
+    <div class="search-row">
+      <input id="searchInput" type="search" inputmode="search" placeholder="Buscar por código ou nome do cliente" autocomplete="off" aria-label="Buscar cliente">
+    </div>
 
-<footer class="footnote">
-  <span id="totalFooter"></span>
-</footer>
+    <div class="filter-row">
+      <select id="cidadeFilter" aria-label="Filtrar por cidade">
+        <option value="">Todas as cidades</option>
+      </select>
+      <button id="clearFilters" class="ghost-btn" type="button">Limpar</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="resultCount" class="result-count"></div>
+    <ul id="clientList" class="client-list" aria-live="polite"></ul>
+    <p id="emptyState" class="empty-state" hidden>
+      Nenhum cliente encontrado com esses filtros.<br>
+      Tente outro código, nome ou limpe os filtros.
+    </p>
+  </main>
+
+  <footer class="footnote">
+    <span id="totalFooter"></span>
+  </footer>
+</div>
 
 <script src="app.js"></script>
 </body>

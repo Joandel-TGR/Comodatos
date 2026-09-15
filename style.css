@@ -27,7 +27,144 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* ---------- Header ---------- */
+/* ---------- Home (seleção de vendedor) ---------- */
+
+.home-view {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background: var(--bg);
+}
+
+.home-inner {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.home-mark {
+  color: var(--accent);
+  display: inline-flex;
+  margin-bottom: 14px;
+}
+
+.home-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+
+.home-subtitle {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin: 0 0 26px;
+}
+
+.home-loading {
+  color: var(--muted);
+  font-size: 13px;
+  grid-column: 1 / -1;
+}
+
+.vend-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.vend-card {
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 14px 6px 12px;
+  font-family: var(--sans);
+  text-align: center;
+}
+
+.vend-card:active {
+  background: var(--accent-soft);
+  border-color: var(--accent-soft);
+}
+
+.vend-card-code {
+  display: block;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.vend-card-count {
+  display: block;
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.link-btn {
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-soft);
+}
+
+@media (min-width: 420px) {
+  .vend-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ---------- View switching ---------- */
+
+.view[hidden] {
+  display: none;
+}
+
+/* ---------- Back button + vendor chip (tela de consulta) ---------- */
+
+.back-btn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  background: var(--bg);
+  color: var(--ink-soft);
+}
+
+.back-btn:active {
+  background: var(--surface);
+}
+
+.vend-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.vend-chip {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
 
 .topbar {
   position: sticky;
