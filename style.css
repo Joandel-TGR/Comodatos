@@ -210,12 +210,23 @@ body {
   display: flex;
 }
 
+.title-block {
+  flex: 1;
+  min-width: 0;
+}
+
 .title-block h1 {
   font-size: 19px;
   font-weight: 700;
   letter-spacing: -0.01em;
   margin: 0;
   line-height: 1.1;
+}
+
+.topbar-handshake {
+  height: 32px;
+  width: auto;
+  flex-shrink: 0;
 }
 
 .subtitle {

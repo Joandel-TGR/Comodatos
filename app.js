@@ -137,6 +137,9 @@
   function render() {
     listEl.innerHTML = "";
 
+    dbInfoEl.textContent = filtered.length.toLocaleString("pt-BR") +
+      (filtered.length === 1 ? " cliente com itens" : " clientes com itens") + " em comodato";
+
     if (filtered.length === 0) {
       emptyEl.hidden = false;
       countEl.textContent = "";
