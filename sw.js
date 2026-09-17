@@ -1,4 +1,4 @@
-var CACHE_NAME = "comodatos-v9";
+var CACHE_NAME = "comodatos-cache";
 var ASSETS = [
   "./",
   "./index.html",
@@ -32,19 +32,21 @@ self.addEventListener("activate", function (event) {
   self.clients.claim();
 });
 
+// Estratégia "network-first": sempre tenta buscar a versão mais nova na
+// internet primeiro (e atualiza o cache com ela). Só usa a cópia salva
+// quando não há internet. Assim, qualquer atualização no GitHub (dados ou
+// código) chega automaticamente na próxima vez que o app abrir com internet
+// — sem precisar mudar nenhum número de versão manualmente.
 self.addEventListener("fetch", function (event) {
   event.respondWith(
-    caches.match(event.request).then(function (cached) {
-      if (cached) return cached;
-      return fetch(event.request).then(function (response) {
-        var copy = response.clone();
-        caches.open(CACHE_NAME).then(function (cache) {
-          cache.put(event.request, copy);
-        });
-        return response;
-      }).catch(function () {
-        return cached;
+    fetch(event.request).then(function (response) {
+      var copy = response.clone();
+      caches.open(CACHE_NAME).then(function (cache) {
+        cache.put(event.request, copy);
       });
+      return response;
+    }).catch(function () {
+      return caches.match(event.request);
     })
   );
 });
