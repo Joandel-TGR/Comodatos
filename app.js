@@ -298,7 +298,9 @@
           qtd: 0,
           registros: 0,
           primeiraData: it.data,
-          ultimaData: it.data
+          ultimaData: it.data,
+          patrimonio: it.patrimonio,
+          cev: it.cev
         };
         order.push(key);
       }
@@ -321,7 +323,10 @@
       var sub = g.registros > 1
         ? "Cód. " + g.prodCod + " · " + g.registros + " lançamentos · última " + formatDate(g.ultimaData)
         : "Cód. " + g.prodCod + " · " + formatDate(g.ultimaData);
-      list.appendChild(buildItemRow(g.prod, sub, g.qtd + " unid."));
+      var extra = (g.registros === 1 && g.patrimonio)
+        ? ("Nº Patrimônio: " + g.patrimonio + " · CEV: " + g.cev)
+        : null;
+      list.appendChild(buildItemRow(g.prod, sub, g.qtd + " unid.", extra));
     });
 
     return list;
@@ -333,19 +338,26 @@
 
     itemsByDate.forEach(function (it) {
       var sub = formatDate(it.data) + " · Cód. " + it.prodCod;
-      list.appendChild(buildItemRow(it.prod, sub, it.qtd + " unid."));
+      var extra = it.patrimonio
+        ? ("Nº Patrimônio: " + it.patrimonio + " · CEV: " + it.cev)
+        : null;
+      list.appendChild(buildItemRow(it.prod, sub, it.qtd + " unid.", extra));
     });
 
     return list;
   }
 
-  function buildItemRow(prodTxt, subTxt, qtdTxt) {
+  function buildItemRow(prodTxt, subTxt, qtdTxt, extraTxt) {
     var row = document.createElement("div");
     row.className = "item-row";
 
     var prod = document.createElement("div");
     prod.className = "item-prod";
-    prod.textContent = prodTxt;
+    if (extraTxt) {
+      prod.innerHTML = escapeHtml(prodTxt) + ' <span class="item-patrimonio">' + escapeHtml(extraTxt) + "</span>";
+    } else {
+      prod.textContent = prodTxt;
+    }
     row.appendChild(prod);
 
     var sub = document.createElement("div");

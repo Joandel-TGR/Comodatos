@@ -23,6 +23,7 @@ def main():
     caminho = sys.argv[1]
     df = pd.read_excel(caminho)
     df["Data Emp"] = pd.to_datetime(df["Data Emp"]).dt.strftime("%Y-%m-%d")
+    tem_patrimonio = "Nº Patrimônio" in df.columns
 
     clientes = {}
     for _, r in df.iterrows():
@@ -36,12 +37,16 @@ def main():
                 "vend": int(r["Vend"]),
                 "itens": [],
             }
+        patrimonio = None
+        if tem_patrimonio and pd.notna(r["Nº Patrimônio"]):
+            patrimonio = int(r["Nº Patrimônio"])
         clientes[cod]["itens"].append({
             "cev": int(r["CEV"]),
             "prodCod": int(r["Cód Prod"]),
             "prod": r["Descrição Produto"],
             "data": r["Data Emp"],
             "qtd": int(r["Qtd"]),
+            "patrimonio": patrimonio,
         })
 
     dados = list(clientes.values())
