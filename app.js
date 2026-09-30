@@ -353,12 +353,15 @@
 
     var prod = document.createElement("div");
     prod.className = "item-prod";
-    if (extraTxt) {
-      prod.innerHTML = escapeHtml(prodTxt) + ' <span class="item-patrimonio">' + escapeHtml(extraTxt) + "</span>";
-    } else {
-      prod.textContent = prodTxt;
-    }
+    prod.textContent = prodTxt;
     row.appendChild(prod);
+
+    if (extraTxt) {
+      var patr = document.createElement("div");
+      patr.className = "item-patrimonio";
+      patr.textContent = extraTxt;
+      row.appendChild(patr);
+    }
 
     var sub = document.createElement("div");
     sub.className = "item-sub";
