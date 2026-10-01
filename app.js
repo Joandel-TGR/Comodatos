@@ -141,6 +141,10 @@
       (filtered.length === 1 ? " cliente com itens" : " clientes com itens") + " em comodato";
 
     if (filtered.length === 0) {
+      var temBusca = searchInput.value.trim().length > 0;
+      emptyEl.innerHTML = temBusca
+        ? "Esse cliente não possui comodatos."
+        : "Nenhum cliente encontrado com esses filtros.<br>Tente outro código, nome ou limpe os filtros.";
       emptyEl.hidden = false;
       countEl.textContent = "";
       return;
