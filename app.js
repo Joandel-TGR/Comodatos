@@ -142,9 +142,13 @@
 
     if (filtered.length === 0) {
       var temBusca = searchInput.value.trim().length > 0;
-      emptyEl.innerHTML = temBusca
+      var msg = temBusca
         ? "Esse cliente não possui comodatos."
-        : "Nenhum cliente encontrado com esses filtros.<br>Tente outro código, nome ou limpe os filtros.";
+        : "Nenhum cliente encontrado com esses filtros. Tente outro código, nome ou limpe os filtros.";
+      emptyEl.innerHTML =
+        '<span class="empty-icon">!</span>' +
+        '<span class="empty-divider"></span>' +
+        '<span class="empty-text">' + escapeHtml(msg) + "</span>";
       emptyEl.hidden = false;
       countEl.textContent = "";
       return;

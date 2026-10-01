@@ -482,11 +482,45 @@ body {
 /* ---------- Empty / footer ---------- */
 
 .empty-state {
-  text-align: center;
-  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 40px 16px;
+  padding: 16px 18px;
+  border: 2px solid var(--accent);
+  border-radius: 14px;
+  background: var(--accent-soft);
+}
+
+.empty-icon {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  font-family: var(--sans);
+}
+
+.empty-divider {
+  flex-shrink: 0;
+  width: 2px;
+  align-self: stretch;
+  background: var(--accent);
+  opacity: 0.35;
+  border-radius: 2px;
+}
+
+.empty-text {
+  color: var(--accent);
+  font-weight: 700;
   font-size: 13.5px;
-  padding: 60px 24px;
-  line-height: 1.6;
+  line-height: 1.4;
 }
 
 .footnote {
