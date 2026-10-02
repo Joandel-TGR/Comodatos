@@ -481,6 +481,10 @@ body {
 
 /* ---------- Empty / footer ---------- */
 
+.empty-state[hidden] {
+  display: none;
+}
+
 .empty-state {
   display: flex;
   align-items: center;

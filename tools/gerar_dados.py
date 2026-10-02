@@ -26,7 +26,11 @@ def main():
     tem_patrimonio = "Nº Patrimônio" in df.columns
 
     clientes = {}
+    puladas = 0
     for _, r in df.iterrows():
+        if pd.isna(r["Cód Prod"]) or pd.isna(r["Descrição Produto"]):
+            puladas += 1
+            continue
         cod = r["Cód"]
         if cod not in clientes:
             clientes[cod] = {
@@ -48,6 +52,9 @@ def main():
             "qtd": int(r["Qtd"]),
             "patrimonio": patrimonio,
         })
+
+    if puladas:
+        print(f"Aviso: {puladas} linha(s) sem código/descrição de produto foram ignoradas.")
 
     dados = list(clientes.values())
 
