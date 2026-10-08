@@ -10,6 +10,7 @@
   var homeView = document.getElementById("homeView");
   var consultaView = document.getElementById("consultaView");
   var vendGrid = document.getElementById("vendGrid");
+  var updateStatusEl = document.getElementById("updateStatus");
   var vendAllBtn = document.getElementById("vendAllBtn");
   var backBtn = document.getElementById("backBtn");
   var trocarVendBtn = document.getElementById("trocarVendBtn");
@@ -40,7 +41,13 @@
   fetch("clientes.json")
     .then(function (r) { return r.json(); })
     .then(function (data) {
-      clients = data;
+      // Formato novo: { atualizadoEm, clientes }. Aceita também o antigo (lista simples).
+      if (Array.isArray(data)) {
+        clients = data;
+      } else {
+        clients = data.clientes || [];
+        showUpdateStatus(data.atualizadoEm);
+      }
       clients.forEach(function (c) {
         c._search = normalize(c.cod + " " + c.razao + " " + c.fantasia);
         c._itemCount = c.itens.length;
@@ -58,6 +65,15 @@
       vendGrid.innerHTML = "<p class=\"home-loading\">Não foi possível carregar a base de dados.</p>";
       console.error(err);
     });
+
+  function showUpdateStatus(iso) {
+    // iso = "2026-10-07T21:23" (já em horário de Brasília)
+    var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(iso || "");
+    if (!m) return;
+    updateStatusEl.textContent =
+      "Última atualização: " + m[3] + "/" + m[2] + "/" + m[1] + " às " + m[4] + ":" + m[5];
+    updateStatusEl.hidden = false;
+  }
 
   function populateFilters() {
     var cidades = Array.from(new Set(clients.map(function (c) { return c.cidade; }))).sort();

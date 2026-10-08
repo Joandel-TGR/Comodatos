@@ -12,7 +12,11 @@ Requer: pandas, openpyxl  (pip install pandas openpyxl)
 import sys
 import json
 import os
+from datetime import datetime, timezone, timedelta
 import pandas as pd
+
+# Horário de Brasília (UTC-3, sem horário de verão atualmente).
+FUSO_BRASILIA = timezone(timedelta(hours=-3))
 
 
 def main():
@@ -59,10 +63,13 @@ def main():
     dados = list(clientes.values())
 
     saida = os.path.join(os.path.dirname(__file__), "..", "clientes.json")
+    agora = datetime.now(FUSO_BRASILIA).strftime("%Y-%m-%dT%H:%M")
+    pacote = {"atualizadoEm": agora, "clientes": dados}
     with open(saida, "w", encoding="utf-8") as f:
-        json.dump(dados, f, ensure_ascii=False, separators=(",", ":"))
+        json.dump(pacote, f, ensure_ascii=False, separators=(",", ":"))
 
     print(f"OK: {len(dados)} clientes gravados em {os.path.abspath(saida)}")
+    print(f"Última atualização registrada: {agora.replace('T', ' ')} (horário de Brasília)")
 
 
 if __name__ == "__main__":

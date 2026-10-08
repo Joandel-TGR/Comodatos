@@ -52,6 +52,13 @@ tools/gerar_dados.py  script para atualizar clientes.json a partir da planilha
    um app normal. Depois de abrir uma vez com internet, ele continua
    funcionando **sem internet** nas próximas vezes.
 
+## Status de atualização
+
+A tela inicial mostra "Última atualização: dd/mm/aaaa às hh:mm". Essa data e
+hora são gravadas automaticamente dentro do `clientes.json` toda vez que o
+`tools/gerar_dados.py` roda (horário de Brasília). Ou seja, basta gerar e
+subir o `clientes.json` novo — o aviso se atualiza sozinho.
+
 ## Atualizar os dados depois
 
 Quando a planilha de comodatos mudar:
