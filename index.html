@@ -14,21 +14,26 @@
 
 <!-- ===================== TELA INICIAL ===================== -->
 <div id="homeView" class="view home-view">
-  <div class="home-brand-row">
-    <img src="icons/brand/logo-tgr.png" alt="TGR Bebidas" class="home-logo">
-    <img src="icons/brand/handshake.png" alt="" class="home-handshake" aria-hidden="true">
-  </div>
-  <div class="home-inner">
+  <header class="home-hero">
+    <div class="home-brand-row">
+      <img src="icons/brand/logo-tgr.png" alt="TGR Bebidas" class="home-logo">
+      <img src="icons/brand/handshake.png" alt="" class="home-handshake" aria-hidden="true">
+    </div>
     <h1 class="home-title">Consulta Comodatos</h1>
     <p class="home-subtitle">Selecione seu código de vendedor para começar</p>
+  </header>
 
+  <div class="home-inner">
+    <div class="home-section-label"><span>Vendedores</span><span id="vendCount"></span></div>
     <div id="vendGrid" class="vend-grid" aria-label="Selecionar vendedor">
       <p class="home-loading">carregando vendedores…</p>
     </div>
 
+    <button id="vendAllBtn" type="button" class="all-btn">
+      <span>Ver todos os clientes</span>
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
     <p id="updateStatus" class="update-status" hidden></p>
-
-    <button id="vendAllBtn" type="button" class="link-btn">Ver todos os clientes, sem filtrar por vendedor</button>
   </div>
 </div>
 

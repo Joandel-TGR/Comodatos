@@ -94,13 +94,16 @@
     var vends = Object.keys(counts).map(Number).sort(function (a, b) { return a - b; });
 
     vendGrid.innerHTML = "";
+    var vc = document.getElementById("vendCount");
+    if (vc) vc.textContent = vends.length + " códigos";
     vends.forEach(function (v) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "vend-card";
       btn.innerHTML =
+        '<span class="vend-card-label">VEND.</span>' +
         '<span class="vend-card-code">' + v + "</span>" +
-        '<span class="vend-card-count">' + counts[v] + (counts[v] === 1 ? " cliente" : " clientes") + "</span>";
+        '<span class="vend-card-count">' + counts[v].toLocaleString("pt-BR") + (counts[v] === 1 ? " cliente" : " clientes") + "</span>";
       btn.addEventListener("click", function () {
         goToConsulta(v);
       });
