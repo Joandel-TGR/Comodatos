@@ -589,24 +589,3 @@ body {
 
 /* Variante A: claro com faixa vermelha */
 .home-hero{background:#fff;border-top:5px solid var(--accent);padding:14px 20px 20px;border-bottom:1px solid #E1E5E7}
-
-/* ===== Tela inicial: onda vermelha no rodapé + largura em telas grandes ===== */
-.home-view{display:flex;flex-direction:column}
-.home-inner{flex:0 0 auto;width:100%;max-width:480px;margin:0 auto;padding-bottom:22px}
-.home-hero{padding-left:max(20px,calc((100% - 480px) / 2));padding-right:max(20px,calc((100% - 480px) / 2))}
-.home-wave{margin-top:auto;height:58px;line-height:0;background:#C9161F;padding-bottom:env(safe-area-inset-bottom,0px);box-sizing:content-box;position:relative}
-.home-wave svg{display:block;position:absolute;left:0;top:0;width:100%;height:58px}
-
-/* Cartões como na imagem aprovada: só código + clientes, código maior */
-.vend-card{padding:15px 4px 13px}
-.vend-card-code{font-size:24px;margin-top:0}
-
-/* Ajustes finos de altura para caber em celulares de 844px */
-.home-inner{padding-bottom:10px}
-.vend-card{padding:14px 4px 12px}
-.update-status{margin-top:12px}
-
-.vend-card{padding:16px 4px 14px}
-
-.home-inner{padding-bottom:4px}
-.update-status{margin-top:10px}
