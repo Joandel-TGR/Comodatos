@@ -663,6 +663,18 @@ body {
 .client-razao{display:flex;align-items:baseline;gap:8px;margin-top:2px}
 .client-cod{flex:0 0 auto;font-family:var(--mono);font-size:12px;color:var(--ink-soft);letter-spacing:0.01em}
 .client-nome{min-width:0;overflow-wrap:anywhere}
+
+/* ===== Razão social com a mesma fonte/tamanho do código; ponto mais escuro ===== */
+.client-nome{font-family:var(--mono);font-size:12px;letter-spacing:0.01em}
+.client-meta .dot{color:var(--ink-soft);font-weight:700}
+
+/* ===== Cartão: selo "N itens" + seta na linha do nome fantasia ===== */
+.client-summary{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;align-items:start}
+.client-fantasia{grid-column:1;grid-row:1;align-self:center}
+.client-side{grid-column:2;grid-row:1;align-self:center;display:flex;align-items:center;gap:8px}
+.client-side .chevron{margin:0}
+.client-razao{grid-column:1 / -1;grid-row:2}
+.client-meta{grid-column:1 / -1;grid-row:3;margin-top:3px}
 </style>
 </head>
 <body>
@@ -969,13 +981,10 @@ body {
     var summary = document.createElement("summary");
     summary.className = "client-summary";
 
-    var main = document.createElement("div");
-    main.className = "client-main";
-
     var fantasia = document.createElement("div");
     fantasia.className = "client-fantasia";
     fantasia.textContent = c.fantasia || c.razao;
-    main.appendChild(fantasia);
+    summary.appendChild(fantasia);
 
     var razao = document.createElement("div");
     razao.className = "client-razao";
@@ -989,15 +998,13 @@ body {
       nome.textContent = c.razao;
       razao.appendChild(nome);
     }
-    main.appendChild(razao);
+    summary.appendChild(razao);
 
     var meta = document.createElement("div");
     meta.className = "client-meta";
     meta.innerHTML = escapeHtml(c.cidade) +
       '<span class="dot">·</span>Vend ' + c.vend;
-    main.appendChild(meta);
-
-    summary.appendChild(main);
+    summary.appendChild(meta);
 
     var side = document.createElement("div");
     side.className = "client-side";
