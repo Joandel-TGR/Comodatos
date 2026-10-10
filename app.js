@@ -100,7 +100,7 @@
       btn.className = "vend-card";
       btn.innerHTML =
         '<span class="vend-card-code">' + v + "</span>" +
-        '<span class="vend-card-count">' + counts[v] + (counts[v] === 1 ? " cliente" : " clientes") + "</span>";
+        '<span class="vend-card-count">' + counts[v].toLocaleString("pt-BR") + (counts[v] === 1 ? " cliente" : " clientes") + "</span>";
       btn.addEventListener("click", function () {
         goToConsulta(v);
       });
