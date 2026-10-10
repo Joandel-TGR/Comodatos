@@ -8,7 +8,657 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="style.css">
+<style>
+:root {
+  --ink: #1B2430;
+  --ink-soft: #495363;
+  --muted: #6B7680;
+  --bg: #FFFFFF;
+  --surface: #F4F6F7;
+  --surface-hover: #ECEFF0;
+  --border: #DCE1E3;
+  --accent: #B23A2F;
+  --accent-soft: #F5E4E1;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Consolas", monospace;
+  --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ---------- Home (seleção de vendedor) ---------- */
+
+.home-view {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px 32px;
+  background: var(--bg);
+}
+
+.home-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.home-logo {
+  height: 30px;
+  width: auto;
+  flex-shrink: 1;
+  min-width: 0;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.home-handshake {
+  height: 44px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.home-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.home-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+
+.home-subtitle {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin: 0 0 26px;
+}
+
+.update-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.update-status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2E9E5B;
+}
+
+.update-status[hidden] {
+  display: none;
+}
+
+.home-loading {
+  color: var(--muted);
+  font-size: 13px;
+  grid-column: 1 / -1;
+}
+
+.vend-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.vend-card {
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 14px 6px 12px;
+  font-family: var(--sans);
+  text-align: center;
+}
+
+.vend-card:active {
+  background: var(--accent-soft);
+  border-color: var(--accent-soft);
+}
+
+.vend-card-code {
+  display: block;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.vend-card-count {
+  display: block;
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.link-btn {
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-soft);
+}
+
+@media (min-width: 420px) {
+  .vend-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ---------- View switching ---------- */
+
+.view[hidden] {
+  display: none;
+}
+
+/* ---------- Back button + vendor chip (tela de consulta) ---------- */
+
+.back-btn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  background: var(--bg);
+  color: var(--ink-soft);
+}
+
+.back-btn:active {
+  background: var(--surface);
+}
+
+.vend-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.vend-chip {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 16px 12px;
+}
+
+.topbar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.mark {
+  color: var(--accent);
+  flex-shrink: 0;
+  display: flex;
+}
+
+.title-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.title-block h1 {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.topbar-handshake {
+  height: 32px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.search-row input[type="search"] {
+  width: 100%;
+  font-size: 16px;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+.search-row input[type="search"]:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  background: var(--bg);
+}
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.filter-row select {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  padding: 9px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-family: var(--sans);
+}
+
+.ghost-btn {
+  flex: 0 0 auto;
+  font-size: 13.5px;
+  padding: 9px 12px;
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+  font-family: var(--sans);
+}
+
+.ghost-btn:active {
+  background: var(--accent-soft);
+}
+
+/* ---------- Result meta ---------- */
+
+.result-count {
+  padding: 12px 16px 4px;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Client list ---------- */
+
+.client-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.client-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.client-summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.client-summary:active {
+  background: var(--surface-hover);
+}
+
+.client-main {
+  min-width: 0;
+}
+
+.client-fantasia {
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.25;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.client-razao {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: 1px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.client-meta {
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 6px;
+  font-family: var(--mono);
+  letter-spacing: 0.01em;
+}
+
+.client-meta .dot {
+  color: var(--border);
+  margin: 0 5px;
+}
+
+.client-side {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.item-badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 12.5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: var(--mono);
+}
+
+.item-badge small {
+  font-weight: 500;
+  font-size: 10px;
+}
+
+.chevron {
+  display: block;
+  margin: 8px 0 0 auto;
+  color: var(--muted);
+  transition: transform 0.15s ease;
+}
+
+.client-card[open] .chevron {
+  transform: rotate(180deg);
+}
+
+/* ---------- Items table ---------- */
+
+.items-panel {
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px 0;
+}
+
+.tab-btn {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--muted);
+}
+
+.tab-btn.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent-soft);
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+}
+
+.item-row {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--surface);
+}
+
+.item-row:last-child {
+  border-bottom: none;
+}
+
+.item-prod {
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.item-patrimonio {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 4px;
+}
+
+.item-sub {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 3px;
+  overflow-wrap: anywhere;
+}
+
+.item-qtd {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: right;
+  margin-top: 3px;
+}
+
+.items-total {
+  padding: 9px 14px 11px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+  font-family: var(--mono);
+}
+
+/* ---------- Empty / footer ---------- */
+
+.empty-state[hidden] {
+  display: none;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 40px 16px;
+  padding: 16px 18px;
+  border: 2px solid var(--accent);
+  border-radius: 14px;
+  background: var(--accent-soft);
+}
+
+.empty-icon {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  font-family: var(--sans);
+}
+
+.empty-divider {
+  flex-shrink: 0;
+  width: 2px;
+  align-self: stretch;
+  background: var(--accent);
+  opacity: 0.35;
+  border-radius: 2px;
+}
+
+.empty-text {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+
+.footnote {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  padding: 6px 16px 24px;
+}
+
+@media (min-width: 640px) {
+  .topbar, main, .footnote { max-width: 640px; margin-left: auto; margin-right: auto; }
+  .topbar { padding-left: 0; padding-right: 0; }
+  .result-count, .client-list, .footnote { padding-left: 0; padding-right: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron { transition: none; }
+}
+
+/* ===== PRÉVIA: tela inicial ===== */
+.home-view{display:block;padding:0;min-height:100vh;min-height:100dvh;background:#F2F4F5}
+.home-brand-row{margin-bottom:16px}
+.home-title{text-align:left;font-size:27px;font-weight:800;margin:0 0 4px;letter-spacing:-.02em}
+.home-subtitle{text-align:left;margin:0;font-size:13.5px}
+.home-inner{display:block;max-width:none;margin:0;padding:18px 16px 26px;text-align:left}
+.home-section-label{display:flex;justify-content:space-between;align-items:center;margin:0 2px 10px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.vend-grid{gap:10px;margin-bottom:16px}
+.vend-card{background:#fff;border:1px solid #E1E5E7;border-radius:14px;box-shadow:0 1px 2px rgba(27,36,48,.07),0 4px 10px -6px rgba(27,36,48,.12);padding:11px 4px 10px}
+.vend-card:active{background:var(--accent-soft);border-color:var(--accent)}
+.vend-card-label{display:block;font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+.vend-card-code{font-size:22px;margin-top:1px;color:var(--ink)}
+.vend-card-count{margin-top:3px;font-size:10.5px}
+.all-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:1.5px solid var(--accent);border-radius:13px;background:#fff;color:var(--accent);font-family:var(--sans);font-size:14.5px;font-weight:700}
+.all-btn:active{background:var(--accent-soft)}
+.update-status{display:flex;width:fit-content;margin:16px auto 0;background:transparent;border:none;padding:0;font-size:12px;color:var(--muted)}
+
+/* Variante A: claro com faixa vermelha */
+.home-hero{background:#fff;border-top:5px solid var(--accent);padding:14px 20px 20px;border-bottom:1px solid #E1E5E7}
+
+/* ===== Tela inicial: onda vermelha no rodapé + largura em telas grandes ===== */
+.home-view{display:flex;flex-direction:column}
+.home-inner{flex:0 0 auto;width:100%;max-width:480px;margin:0 auto;padding-bottom:22px}
+.home-hero{padding-left:max(20px,calc((100% - 480px) / 2));padding-right:max(20px,calc((100% - 480px) / 2))}
+.home-wave{margin-top:auto;height:58px;line-height:0;background:#C9161F;padding-bottom:env(safe-area-inset-bottom,0px);box-sizing:content-box;position:relative}
+.home-wave svg{display:block;position:absolute;left:0;top:0;width:100%;height:58px}
+
+/* Cartões como na imagem aprovada: só código + clientes, código maior */
+.vend-card{padding:15px 4px 13px}
+.vend-card-code{font-size:24px;margin-top:0}
+
+/* Ajustes finos de altura para caber em celulares de 844px */
+.home-inner{padding-bottom:10px}
+.vend-card{padding:14px 4px 12px}
+.update-status{margin-top:12px}
+
+.vend-card{padding:16px 4px 14px}
+
+.home-inner{padding-bottom:4px}
+.update-status{margin-top:10px}
+
+/* ===== Tela inicial compacta: cabe em celulares de qualquer altura ===== */
+.home-hero{padding-top:11px;padding-bottom:13px}
+.home-brand-row{margin-bottom:8px}
+.home-logo{height:26px}
+.home-handshake{height:38px}
+.home-title{font-size:22px;margin:0 0 2px}
+.home-subtitle{font-size:12.5px}
+.home-inner{padding:12px 16px 4px}
+.vend-grid{gap:8px;margin-bottom:12px}
+.vend-card{
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:0;
+  height:clamp(46px,8vh,76px);
+  height:clamp(46px,8dvh,76px);
+}
+.vend-card-code{font-size:clamp(18px,3.1vh,24px);font-size:clamp(18px,3.1dvh,24px);line-height:1.1;margin:0}
+.vend-card-count{font-size:10px;margin-top:2px;line-height:1.2}
+.all-btn{padding:11px;font-size:14px;border-radius:12px}
+.update-status{margin-top:10px;font-size:11.5px}
+.home-wave{height:44px}
+.home-wave svg{height:44px}
+
+
+/* ===== Onda: fundo transparente para a curva aparecer (como no desenho aprovado) ===== */
+.home-wave{
+  background:transparent;
+  padding-bottom:0;
+  height:clamp(46px,14vw,64px);
+  position:relative;
+}
+.home-wave svg{height:100%}
+.home-wave::after{
+  content:"";position:absolute;left:0;right:0;top:100%;
+  height:env(safe-area-inset-bottom,0px);
+  background:#8A090F;
+}
+</style>
 </head>
 <body>
 
@@ -100,6 +750,445 @@
   </footer>
 </div>
 
-<script src="app.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var clients = [];
+  var filtered = [];
+  var renderLimit = 150;
+  var PAGE_SIZE = 150;
+  var selectedVend = null; // null = "ver todos"
+
+  var homeView = document.getElementById("homeView");
+  var consultaView = document.getElementById("consultaView");
+  var vendGrid = document.getElementById("vendGrid");
+  var updateStatusEl = document.getElementById("updateStatus");
+  var vendAllBtn = document.getElementById("vendAllBtn");
+  var backBtn = document.getElementById("backBtn");
+  var trocarVendBtn = document.getElementById("trocarVendBtn");
+  var vendChip = document.getElementById("vendChip");
+
+  var searchInput = document.getElementById("searchInput");
+  var cidadeFilter = document.getElementById("cidadeFilter");
+  var clearBtn = document.getElementById("clearFilters");
+  var listEl = document.getElementById("clientList");
+  var emptyEl = document.getElementById("emptyState");
+  var countEl = document.getElementById("resultCount");
+  var dbInfoEl = document.getElementById("dbInfo");
+  var totalFooterEl = document.getElementById("totalFooter");
+
+  function normalize(s) {
+    return (s || "")
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  }
+
+  function formatDate(iso) {
+    var parts = iso.split("-");
+    return parts[2] + "/" + parts[1] + "/" + parts[0];
+  }
+
+  fetch("clientes.json")
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      // Formato novo: { atualizadoEm, clientes }. Aceita também o antigo (lista simples).
+      if (Array.isArray(data)) {
+        clients = data;
+      } else {
+        clients = data.clientes || [];
+        showUpdateStatus(data.atualizadoEm);
+      }
+      clients.forEach(function (c) {
+        c._search = normalize(c.cod + " " + c.razao + " " + c.fantasia);
+        c._itemCount = c.itens.length;
+        c._lastDate = c.itens.reduce(function (max, it) {
+          return it.data > max ? it.data : max;
+        }, c.itens[0] ? c.itens[0].data : "");
+      });
+      populateFilters();
+      populateVendGrid();
+      dbInfoEl.textContent = clients.length.toLocaleString("pt-BR") + " clientes com itens em comodato";
+      totalFooterEl.textContent = "Base local · " + clients.length.toLocaleString("pt-BR") + " clientes · funciona offline";
+    })
+    .catch(function (err) {
+      dbInfoEl.textContent = "Não foi possível carregar a base de dados.";
+      vendGrid.innerHTML = "<p class=\"home-loading\">Não foi possível carregar a base de dados.</p>";
+      console.error(err);
+    });
+
+  function showUpdateStatus(iso) {
+    // iso = "2026-10-07T21:23" (já em horário de Brasília)
+    var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(iso || "");
+    if (!m) return;
+    updateStatusEl.textContent =
+      "Última atualização: " + m[3] + "/" + m[2] + "/" + m[1] + " às " + m[4] + ":" + m[5];
+    updateStatusEl.hidden = false;
+  }
+
+  function populateFilters() {
+    var cidades = Array.from(new Set(clients.map(function (c) { return c.cidade; }))).sort();
+
+    cidades.forEach(function (cidade) {
+      var opt = document.createElement("option");
+      opt.value = cidade;
+      opt.textContent = cidade;
+      cidadeFilter.appendChild(opt);
+    });
+  }
+
+  function populateVendGrid() {
+    var counts = {};
+    clients.forEach(function (c) {
+      counts[c.vend] = (counts[c.vend] || 0) + 1;
+    });
+    var vends = Object.keys(counts).map(Number).sort(function (a, b) { return a - b; });
+
+    vendGrid.innerHTML = "";
+    vends.forEach(function (v) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "vend-card";
+      btn.innerHTML =
+        '<span class="vend-card-code">' + v + "</span>" +
+        '<span class="vend-card-count">' + counts[v].toLocaleString("pt-BR") + (counts[v] === 1 ? " cliente" : " clientes") + "</span>";
+      btn.addEventListener("click", function () {
+        goToConsulta(v);
+      });
+      vendGrid.appendChild(btn);
+    });
+  }
+
+  function goToConsulta(vend) {
+    selectedVend = vend;
+    if (vend === null) {
+      vendChip.textContent = "Todos os vendedores";
+    } else {
+      vendChip.textContent = "Vendedor " + vend;
+    }
+    searchInput.value = "";
+    cidadeFilter.value = "";
+    homeView.hidden = true;
+    consultaView.hidden = false;
+    applyFilters();
+  }
+
+  function goHome() {
+    homeView.hidden = false;
+    consultaView.hidden = true;
+  }
+
+  vendAllBtn.addEventListener("click", function () { goToConsulta(null); });
+  backBtn.addEventListener("click", goHome);
+  trocarVendBtn.addEventListener("click", goHome);
+
+  function applyFilters() {
+    var q = normalize(searchInput.value.trim());
+    var cidade = cidadeFilter.value;
+
+    filtered = clients.filter(function (c) {
+      if (selectedVend !== null && c.vend !== selectedVend) return false;
+      if (cidade && c.cidade !== cidade) return false;
+      if (q && c._search.indexOf(q) === -1) return false;
+      return true;
+    });
+
+    filtered.sort(function (a, b) {
+      return b._lastDate < a._lastDate ? -1 : b._lastDate > a._lastDate ? 1 : 0;
+    });
+
+    renderLimit = PAGE_SIZE;
+    render();
+  }
+
+  function render() {
+    listEl.innerHTML = "";
+
+    dbInfoEl.textContent = filtered.length.toLocaleString("pt-BR") +
+      (filtered.length === 1 ? " cliente com itens" : " clientes com itens") + " em comodato";
+
+    if (filtered.length === 0) {
+      var temBusca = searchInput.value.trim().length > 0;
+      var msg = temBusca
+        ? "Esse cliente não possui comodatos."
+        : "Nenhum cliente encontrado com esses filtros. Tente outro código, nome ou limpe os filtros.";
+      emptyEl.innerHTML =
+        '<span class="empty-icon">!</span>' +
+        '<span class="empty-divider"></span>' +
+        '<span class="empty-text">' + escapeHtml(msg) + "</span>";
+      emptyEl.hidden = false;
+      countEl.textContent = "";
+      return;
+    }
+    emptyEl.hidden = true;
+
+    var showing = filtered.slice(0, renderLimit);
+    countEl.textContent = filtered.length.toLocaleString("pt-BR") + " cliente" + (filtered.length === 1 ? "" : "s") +
+      (filtered.length > showing.length ? " · mostrando " + showing.length : "");
+
+    var frag = document.createDocumentFragment();
+    showing.forEach(function (c) {
+      frag.appendChild(buildClientCard(c));
+    });
+
+    if (filtered.length > showing.length) {
+      var li = document.createElement("li");
+      li.style.listStyle = "none";
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ghost-btn";
+      btn.style.width = "100%";
+      btn.style.padding = "12px";
+      btn.style.border = "1.5px dashed var(--border)";
+      btn.style.borderRadius = "10px";
+      btn.textContent = "Carregar mais (" + (filtered.length - showing.length) + " restantes)";
+      btn.addEventListener("click", function () {
+        renderLimit += PAGE_SIZE;
+        render();
+      });
+      li.appendChild(btn);
+      frag.appendChild(li);
+    }
+
+    listEl.appendChild(frag);
+  }
+
+  function buildClientCard(c) {
+    var li = document.createElement("li");
+
+    var details = document.createElement("details");
+    details.className = "client-card";
+
+    var summary = document.createElement("summary");
+    summary.className = "client-summary";
+
+    var main = document.createElement("div");
+    main.className = "client-main";
+
+    var fantasia = document.createElement("div");
+    fantasia.className = "client-fantasia";
+    fantasia.textContent = c.fantasia || c.razao;
+    main.appendChild(fantasia);
+
+    if (c.fantasia && c.razao && c.fantasia !== c.razao) {
+      var razao = document.createElement("div");
+      razao.className = "client-razao";
+      razao.textContent = c.razao;
+      main.appendChild(razao);
+    }
+
+    var meta = document.createElement("div");
+    meta.className = "client-meta";
+    meta.innerHTML = escapeHtml(c.cod) +
+      '<span class="dot">·</span>' + escapeHtml(c.cidade) +
+      '<span class="dot">·</span>Vend ' + c.vend;
+    main.appendChild(meta);
+
+    summary.appendChild(main);
+
+    var side = document.createElement("div");
+    side.className = "client-side";
+    var badge = document.createElement("span");
+    badge.className = "item-badge";
+    badge.innerHTML = c._itemCount + '<small>' + (c._itemCount === 1 ? "item" : "itens") + "</small>";
+    side.appendChild(badge);
+    side.appendChild(chevronSvg());
+    summary.appendChild(side);
+
+    details.appendChild(summary);
+    details.appendChild(buildItemsPanel(c));
+
+    li.appendChild(details);
+    return li;
+  }
+
+  function buildItemsPanel(c) {
+    var panel = document.createElement("div");
+    panel.className = "items-panel";
+
+    var itemsByDate = c.itens.slice().sort(function (a, b) {
+      return b.data < a.data ? -1 : b.data > a.data ? 1 : 0;
+    });
+
+    var totalQtd = itemsByDate.reduce(function (sum, it) { return sum + it.qtd; }, 0);
+    var resumo = summarizeItems(c.itens);
+    var temRepetido = resumo.some(function (g) { return g.registros > 1; });
+
+    var historicoList = buildHistoricoList(itemsByDate);
+
+    if (temRepetido) {
+      var tabs = document.createElement("div");
+      tabs.className = "tabs";
+      var btnHistorico = document.createElement("button");
+      btnHistorico.type = "button";
+      btnHistorico.className = "tab-btn active";
+      btnHistorico.textContent = "Histórico";
+      var btnResumo = document.createElement("button");
+      btnResumo.type = "button";
+      btnResumo.className = "tab-btn";
+      btnResumo.textContent = "Resumo";
+      tabs.appendChild(btnHistorico);
+      tabs.appendChild(btnResumo);
+      panel.appendChild(tabs);
+
+      var resumoList = buildResumoList(resumo);
+      resumoList.style.display = "none";
+      panel.appendChild(historicoList);
+      panel.appendChild(resumoList);
+
+      btnHistorico.addEventListener("click", function () {
+        btnHistorico.classList.add("active");
+        btnResumo.classList.remove("active");
+        historicoList.style.display = "";
+        resumoList.style.display = "none";
+      });
+      btnResumo.addEventListener("click", function () {
+        btnResumo.classList.add("active");
+        btnHistorico.classList.remove("active");
+        resumoList.style.display = "";
+        historicoList.style.display = "none";
+      });
+    } else {
+      panel.appendChild(historicoList);
+    }
+
+    var totalEl = document.createElement("div");
+    totalEl.className = "items-total";
+    totalEl.textContent = "Total em comodato: " + totalQtd + " unid.";
+    panel.appendChild(totalEl);
+
+    return panel;
+  }
+
+  // Agrupa por produto e soma as quantidades de datas diferentes.
+  function summarizeItems(itens) {
+    var map = {};
+    var order = [];
+    itens.forEach(function (it) {
+      var key = it.prodCod;
+      if (!map[key]) {
+        map[key] = {
+          prodCod: it.prodCod,
+          prod: it.prod,
+          qtd: 0,
+          registros: 0,
+          primeiraData: it.data,
+          ultimaData: it.data,
+          patrimonio: it.patrimonio,
+          cev: it.cev
+        };
+        order.push(key);
+      }
+      var g = map[key];
+      g.qtd += it.qtd;
+      g.registros += 1;
+      if (it.data > g.ultimaData) g.ultimaData = it.data;
+      if (it.data < g.primeiraData) g.primeiraData = it.data;
+    });
+    return order
+      .map(function (k) { return map[k]; })
+      .sort(function (a, b) { return b.qtd - a.qtd; });
+  }
+
+  function buildResumoList(resumo) {
+    var list = document.createElement("div");
+    list.className = "items-list";
+
+    resumo.forEach(function (g) {
+      var sub = g.registros > 1
+        ? "Cód. " + g.prodCod + " · " + g.registros + " lançamentos · última " + formatDate(g.ultimaData)
+        : "Cód. " + g.prodCod + " · " + formatDate(g.ultimaData);
+      var extra = (g.registros === 1 && g.patrimonio)
+        ? ("Nº Patrimônio: " + g.patrimonio + " · CEV: " + g.cev)
+        : null;
+      list.appendChild(buildItemRow(g.prod, sub, g.qtd + " unid.", extra));
+    });
+
+    return list;
+  }
+
+  function buildHistoricoList(itemsByDate) {
+    var list = document.createElement("div");
+    list.className = "items-list";
+
+    itemsByDate.forEach(function (it) {
+      var sub = formatDate(it.data) + " · Cód. " + it.prodCod;
+      var extra = it.patrimonio
+        ? ("Nº Patrimônio: " + it.patrimonio + " · CEV: " + it.cev)
+        : null;
+      list.appendChild(buildItemRow(it.prod, sub, it.qtd + " unid.", extra));
+    });
+
+    return list;
+  }
+
+  function buildItemRow(prodTxt, subTxt, qtdTxt, extraTxt) {
+    var row = document.createElement("div");
+    row.className = "item-row";
+
+    var prod = document.createElement("div");
+    prod.className = "item-prod";
+    prod.textContent = prodTxt;
+    row.appendChild(prod);
+
+    if (extraTxt) {
+      var patr = document.createElement("div");
+      patr.className = "item-patrimonio";
+      patr.textContent = extraTxt;
+      row.appendChild(patr);
+    }
+
+    var sub = document.createElement("div");
+    sub.className = "item-sub";
+    sub.textContent = subTxt;
+    row.appendChild(sub);
+
+    var qtd = document.createElement("div");
+    qtd.className = "item-qtd";
+    qtd.textContent = qtdTxt;
+    row.appendChild(qtd);
+
+    return row;
+  }
+
+  function chevronSvg() {
+    var span = document.createElement("span");
+    span.className = "chevron";
+    span.innerHTML =
+      '<svg width="16" height="16" viewBox="0 0 20 20" fill="none">' +
+      '<path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' +
+      "</svg>";
+    return span;
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  var debounceTimer;
+  searchInput.addEventListener("input", function () {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(applyFilters, 120);
+  });
+  cidadeFilter.addEventListener("change", applyFilters);
+  clearBtn.addEventListener("click", function () {
+    searchInput.value = "";
+    cidadeFilter.value = "";
+    applyFilters();
+  });
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+})();
+
+</script>
 </body>
 </html>

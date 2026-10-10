@@ -12,12 +12,10 @@ depois do primeiro carregamento ele funciona **offline**, sem internet.
 ## Arquivos
 
 ```
-index.html          página do app
-style.css           visual
-app.js              busca, filtros e listagem
+index.html          o app inteiro: página, visual (CSS) e lógica (JS) num arquivo só
 clientes.json       dados dos clientes e comodatos (3.111 clientes)
 manifest.json       configuração para "adicionar à tela inicial"
-sw.js                deixa o app funcionando offline depois da 1ª visita
+sw.js               deixa o app funcionando offline depois da 1ª visita
 icons/              ícones do app
 tools/gerar_dados.py  script para atualizar clientes.json a partir da planilha
 ```
@@ -51,6 +49,13 @@ tools/gerar_dados.py  script para atualizar clientes.json a partir da planilha
 3. Um ícone "Comodatos" aparece na tela inicial, abrindo em tela cheia como
    um app normal. Depois de abrir uma vez com internet, ele continua
    funcionando **sem internet** nas próximas vezes.
+
+## Atualizações no GitHub
+
+- Mudou só os dados: suba apenas o `clientes.json`.
+- Mudou o visual ou o funcionamento: suba apenas o `index.html`
+  (o visual e o código estão dentro dele, então não existe mais o risco de
+  misturar uma versão nova com arquivos antigos).
 
 ## Status de atualização
 
