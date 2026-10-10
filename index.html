@@ -658,6 +658,11 @@ body {
   height:env(safe-area-inset-bottom,0px);
   background:#8A090F;
 }
+
+/* ===== Cartão do cliente: linha 2 = código + razão social ===== */
+.client-razao{display:flex;align-items:baseline;gap:8px;margin-top:2px}
+.client-cod{flex:0 0 auto;font-family:var(--mono);font-size:12px;color:var(--ink-soft);letter-spacing:0.01em}
+.client-nome{min-width:0;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
@@ -972,17 +977,23 @@ body {
     fantasia.textContent = c.fantasia || c.razao;
     main.appendChild(fantasia);
 
+    var razao = document.createElement("div");
+    razao.className = "client-razao";
+    var cod = document.createElement("span");
+    cod.className = "client-cod";
+    cod.textContent = c.cod;
+    razao.appendChild(cod);
     if (c.fantasia && c.razao && c.fantasia !== c.razao) {
-      var razao = document.createElement("div");
-      razao.className = "client-razao";
-      razao.textContent = c.razao;
-      main.appendChild(razao);
+      var nome = document.createElement("span");
+      nome.className = "client-nome";
+      nome.textContent = c.razao;
+      razao.appendChild(nome);
     }
+    main.appendChild(razao);
 
     var meta = document.createElement("div");
     meta.className = "client-meta";
-    meta.innerHTML = escapeHtml(c.cod) +
-      '<span class="dot">·</span>' + escapeHtml(c.cidade) +
+    meta.innerHTML = escapeHtml(c.cidade) +
       '<span class="dot">·</span>Vend ' + c.vend;
     main.appendChild(meta);
 
