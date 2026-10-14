@@ -675,6 +675,39 @@ body {
 .client-side .chevron{margin:0}
 .client-razao{grid-column:1 / -1;grid-row:2}
 .client-meta{grid-column:1 / -1;grid-row:3;margin-top:3px}
+
+/* ===== Selos no estilo do botão vermelho modelo ("Opções") ===== */
+.vend-chip,
+.item-badge{
+  background:#E61D2B;
+  color:#fff;
+  border-radius:4px;
+  font-family:var(--sans);
+  font-weight:600;
+}
+.vend-chip{font-size:13px;padding:6px 12px;letter-spacing:0}
+.item-badge{font-size:12.5px;padding:4px 9px;gap:4px;align-items:baseline}
+.item-badge small{font-family:var(--sans);font-size:11px;font-weight:500;color:#fff}
+
+/* ===== Vermelho padrão: abas, textos-botão e botão da tela inicial ===== */
+.tab-btn{
+  font-size:13px;font-weight:600;padding:6px 14px;
+  border:1px solid #E61D2B;border-radius:4px;
+  background:#fff;color:#E61D2B;
+}
+.tab-btn.active{background:#E61D2B;color:#fff;border-color:#E61D2B}
+
+.ghost-btn{color:#E61D2B}
+
+.all-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:fit-content;margin:0 auto;
+  padding:7px 14px;
+  border:1px solid #E61D2B;border-radius:4px;
+  background:#fff;color:#E61D2B;
+  font-family:var(--sans);font-size:14px;font-weight:500;
+}
+.all-btn:active{background:#FCE8EA}
 </style>
 </head>
 <body>
@@ -697,7 +730,7 @@ body {
 
     <button id="vendAllBtn" type="button" class="all-btn">
       <span>Ver todos os clientes</span>
-      <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M0 0h10L5 6z" fill="currentColor"/></svg>
     </button>
     <p id="updateStatus" class="update-status" hidden></p>
   </div>
